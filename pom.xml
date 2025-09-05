@@ -99,6 +99,12 @@
             <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.3</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -122,6 +128,17 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.6.3</version>
+                        </path>
+                        <!-- Include other annotation processors like Lombok -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>

@@ -1,6 +1,6 @@
 package com.bizpay.controller;
 
-import com.bizpay.exceptions.UserException;
+import com.bizpay.exceptions.ResourceNotFoundException;
 import com.bizpay.payload.dto.UserDto;
 import com.bizpay.payload.response.AuthResponse;
 import com.bizpay.service.AuthService;
@@ -18,12 +18,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signupHandler(@RequestBody UserDto userDto) throws UserException {
+    public ResponseEntity<AuthResponse> signupHandler(@RequestBody UserDto userDto) throws ResourceNotFoundException {
         return ResponseEntity.ok(authService.signup(userDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginHandler(@RequestBody UserDto userDto) throws UserException {
+    public ResponseEntity<AuthResponse> loginHandler(@RequestBody UserDto userDto) throws ResourceNotFoundException {
         return ResponseEntity.ok(authService.login(userDto));
     }
 }

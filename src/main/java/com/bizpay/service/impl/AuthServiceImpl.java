@@ -2,7 +2,7 @@ package com.bizpay.service.impl;
 
 import com.bizpay.config.JwtProvider;
 import com.bizpay.domain.UserRole;
-import com.bizpay.exceptions.UserException;
+import com.bizpay.exceptions.ResourceNotFoundException;
 import com.bizpay.mapper.UserMapper;
 import com.bizpay.models.User;
 import com.bizpay.payload.dto.UserDto;
@@ -29,26 +29,19 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final CustomUserServiceImpl customUserServiceImpl;
+    private final UserMapper userMapper;
 
 
     @Override
-    public AuthResponse signup(UserDto userDto) throws UserException {
+    public AuthResponse signup(UserDto userDto) throws ResourceNotFoundException {
         User user = userRepository.findByEmail(userDto.getEmail());
         if (user != null){
-            throw new UserException("Email id already registered!");
+            throw new ResourceNotFoundException("Email id already registered!");
         }
         if (userDto.getRole().equals(UserRole.ROLE_ADMIN)){
-            throw new UserException("Role Admin is not allowed!");
+            throw new ResourceNotFoundException("Role Admin is not allowed!");
         }
-        User newUser = new User();
-        newUser.setEmail(userDto.getEmail());
-        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        newUser.setRole(userDto.getRole());
-        newUser.setFullName(userDto.getFullName());
-        newUser.setPhone(userDto.getPhone());
-        newUser.setLastLoginAt(LocalDateTime.now());
-        newUser.setCreatedAt(LocalDateTime.now());
-        newUser.setUpdatedAt(LocalDateTime.now());
+        User newUser = userMapper.toEntity(userDto);
 
         User savedUser = userRepository.save(newUser);
 
@@ -61,13 +54,13 @@ public class AuthServiceImpl implements AuthService {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Registered Successfully!");
-        authResponse.setUser(UserMapper.toDto(savedUser));
+        authResponse.setUser(userMapper.toDto(savedUser));
 
         return authResponse;
     }
 
     @Override
-    public AuthResponse login(UserDto userDto) throws UserException {
+    public AuthResponse login(UserDto userDto) throws ResourceNotFoundException {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
         Authentication authentication = authenticate(email, password);
@@ -89,22 +82,22 @@ public class AuthServiceImpl implements AuthService {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Login Successfully!");
-        authResponse.setUser(UserMapper.toDto(user));
+        authResponse.setUser(userMapper.toDto(user));
 
         return authResponse;
     }
 
-    private Authentication authenticate(String email, String password) throws UserException {
+    private Authentication authenticate(String email, String password) throws ResourceNotFoundException {
 
 //        compare password
         UserDetails userDetails = customUserServiceImpl.loadUserByUsername(email);
 
         if (userDetails == null){
-            throw new UserException("Email id doesn't exist " + email);
+            throw new ResourceNotFoundException("Email id doesn't exist " + email);
         }
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new UserException("Password doesn't match.");
+            throw new ResourceNotFoundException("Password doesn't match.");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

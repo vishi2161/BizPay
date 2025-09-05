@@ -33,6 +33,9 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    @ManyToOne
+    private Store store;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
