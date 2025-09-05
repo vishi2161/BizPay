@@ -1,5 +1,6 @@
 package com.bizpay.service;
 
+import com.bizpay.domain.StoreStatus;
 import com.bizpay.exceptions.ResourceNotFoundException;
 import com.bizpay.models.Store;
 import com.bizpay.models.User;
@@ -16,4 +17,5 @@ public interface StoreService {
     StoreDto updateStore(Long id, StoreDto storeDto) throws ResourceNotFoundException;
     void deleteStore(Long id) throws ResourceNotFoundException;
     StoreDto getStoreByEmployee() throws ResourceNotFoundException;
+    StoreDto moderateStore(Long id, StoreStatus status) throws ResourceNotFoundException;
 }

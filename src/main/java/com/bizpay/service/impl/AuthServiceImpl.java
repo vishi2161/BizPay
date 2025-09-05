@@ -42,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResourceNotFoundException("Role Admin is not allowed!");
         }
         User newUser = userMapper.toEntity(userDto);
+        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         User savedUser = userRepository.save(newUser);
 

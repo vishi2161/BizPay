@@ -1,6 +1,7 @@
 package com.bizpay.payload.dto;
 
 import com.bizpay.domain.UserRole;
+import com.bizpay.models.Store;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class UserDto {
     private String password;
 
     private UserRole role;
+
+    private StoreDto storeDto;
 
     private LocalDateTime createdAt;
 

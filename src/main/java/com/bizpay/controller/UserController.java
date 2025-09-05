@@ -28,5 +28,4 @@ public class UserController {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
-
 }

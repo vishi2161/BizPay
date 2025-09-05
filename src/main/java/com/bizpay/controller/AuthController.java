@@ -18,7 +18,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signupHandler(@RequestBody UserDto userDto) throws ResourceNotFoundException {
+    public ResponseEntity<AuthResponse> signupHandler(@RequestBody UserDto userDto) throws ResourceNotFoundException{
         return ResponseEntity.ok(authService.signup(userDto));
     }
 

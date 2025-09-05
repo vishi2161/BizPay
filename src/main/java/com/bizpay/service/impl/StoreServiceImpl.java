@@ -1,5 +1,6 @@
 package com.bizpay.service.impl;
 
+import com.bizpay.domain.StoreStatus;
 import com.bizpay.exceptions.ResourceNotFoundException;
 import com.bizpay.mapper.StoreMapper;
 import com.bizpay.models.Store;
@@ -23,8 +24,9 @@ public class StoreServiceImpl implements StoreService {
     private final StoreMapper storeMapper;
 
     @Override
-    public StoreDto createStore(StoreDto storeDto, User user) {
+    public StoreDto createStore(StoreDto storeDto, User storeAdmin) {
         Store store = storeMapper.toEntity(storeDto);
+        store.setStoreAdmin(storeAdmin);
         return storeMapper.toDto(storeRepository.save(store));
     }
 
@@ -86,4 +88,14 @@ public class StoreServiceImpl implements StoreService {
         }
         return storeMapper.toDto(currentUser.getStore());
     }
+
+    @Override
+    public StoreDto moderateStore(Long id, StoreStatus status) throws ResourceNotFoundException {
+        Store store = storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store not found!"));
+        store.setStatus(status);
+        Store updatedStore = storeRepository.save(store);
+        return storeMapper.toDto(updatedStore);
+    }
+
+
 }
